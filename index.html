@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FootballLive - Watch Football Games Live</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #1a73e8;
+            --secondary: #0d47a1;
+            --accent: #e53935;
+            --light: #f5f5f5;
+            --dark: #212121;
+            --success: #4caf50;
+            --warning: #ff9800;
+            --gray: #757575;
+        }
+
+        body {
+            background-color: #f0f2f5;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .logo i {
+            color: var(--accent);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+
+        nav a:hover, nav a.active {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: white;
+            border: 1px solid white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1575361204480-aadea25e6e68?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+            padding: 80px 20px;
+            margin-bottom: 40px;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 30px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .hero-btn {
+            padding: 12px 24px;
+            font-size: 1.1rem;
+            border-radius: 30px;
+        }
+
+        /* Main Content */
+        .main-content {
+            display: none;
+            padding: 30px 0;
+        }
+
+        .main-content.active {
+            display: block;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Live Now Section */
+        .live-now-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .live-match-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .live-match-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .match-header {
+            background: var(--primary);
+            color: white;
+            padding: 10px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .live-badge {
+            background: var(--accent);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .match-content {
+            padding: 20px;
+        }
+
+        .teams {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .team {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            width: 40%;
+        }
+
+        .team-logo {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 10px;
+            background: #f0f0f0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--gray);
+        }
+
+        .vs {
+            font-weight: bold;
+            color: var(--gray);
+        }
+
+        .score {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 10px 0;
+            text-align: center;
+        }
+
+        .match-time {
+            text-align: center;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .watch-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: var(--primary);
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-top: 15px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .watch-btn:hover {
+            background: var(--secondary);
+        }
+
+        /* Upcoming Matches */
+        .upcoming-container {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .date-tabs {
+            display: flex;
+            background: #f5f5f5;
+            overflow-x: auto;
+        }
+
+        .date-tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            white-space: nowrap;
+        }
+
+        .date-tab.active {
+            border-bottom: 3px solid var(--primary);
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .matches-list {
+            padding: 20px;
+        }
+
+        .match-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .match-item:last-child {
+            border-bottom: none;
+        }
+
+        .match-teams {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex: 1;
+        }
+
+        .match-time {
+            color: var(--gray);
+            min-width: 80px;
+        }
+
+        /* League Tables */
+        .leagues-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .league-table {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .league-header {
+            background: var(--primary);
+            color: white;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background: #f9f9f9;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background: #f5f5f5;
+        }
+
+        .team-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .position {
+            font-weight: bold;
+            width: 25px;
+            text-align: center;
+        }
+
+        /* Results Section */
+        .results-container {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .result-teams {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex: 1;
+        }
+
+        .result-score {
+            font-weight: bold;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        /* Livescore Section */
+        .livescore-container {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .livescore-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .livescore-teams {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex: 1;
+        }
+
+        .livescore-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 120px;
+        }
+
+        .live-indicator {
+            width: 8px;
+            height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 40px 0 20px;
+            margin-top: 60px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .footer-column h3 {
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column li {
+            margin-bottom: 10px;
+        }
+
+        .footer-column a {
+            color: #ddd;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-column a:hover {
+            color: white;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transition: background 0.3s;
+        }
+
+        .social-links a:hover {
+            background: var(--primary);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            nav ul {
+                gap: 10px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .teams {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .team {
+                width: 100%;
+                flex-direction: row;
+                justify-content: center;
+                gap: 10px;
+            }
+
+            .team-logo {
+                margin-bottom: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-futbol"></i>
+                    <span>FootballLive</span>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="#" class="nav-link active" data-target="home">Home</a></li>
+                        <li><a href="#" class="nav-link" data-target="live-now">Live Now</a></li>
+                        <li><a href="#" class="nav-link" data-target="upcoming">Upcoming</a></li>
+                        <li><a href="#" class="nav-link" data-target="tables">League Tables</a></li>
+                        <li><a href="#" class="nav-link" data-target="results">Results</a></li>
+                        <li><a href="#" class="nav-link" data-target="livescore">Livescore</a></li>
+                    </ul>
+                </nav>
+                <div class="auth-buttons">
+                    <button class="btn btn-outline">Login</button>
+                    <button class="btn btn-primary">Sign Up</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Watch Football Games Live</h1>
+            <p>Stream all major football leagues worldwide including Premier League, La Liga, Serie A, Bundesliga, and more. Never miss a match with our comprehensive coverage.</p>
+            <div class="hero-buttons">
+                <button class="btn btn-primary hero-btn" data-target="live-now">
+                    <i class="fas fa-play-circle"></i> Watch Live Now
+                </button>
+                <button class="btn btn-outline hero-btn" data-target="upcoming">
+                    <i class="far fa-calendar-alt"></i> Upcoming Matches
+                </button>
+                <button class="btn btn-outline hero-btn" data-target="livescore">
+                    <i class="fas fa-tachometer-alt"></i> Check Livescore
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content Sections -->
+    <div class="container">
+        <!-- Home Section -->
+        <section id="home" class="main-content active">
+            <h2 class="section-title">
+                <i class="fas fa-home"></i> Featured Live Matches
+            </h2>
+            
+            <div class="live-now-container">
+                <!-- Match 1 -->
+                <div class="live-match-card">
+                    <div class="match-header">
+                        <span>Premier League</span>
+                        <div class="live-badge">
+                            <i class="fas fa-circle"></i> LIVE
+                        </div>
+                    </div>
+                    <div class="match-content">
+                        <div class="teams">
+                            <div class="team">
+                                <div class="team-logo">MCI</div>
+                                <div class="team-name">Manchester City</div>
+                            </div>
+                            <div class="vs">VS</div>
+                            <div class="team">
+                                <div class="team-logo">LIV</div>
+                                <div class="team-name">Liverpool</div>
+                            </div>
+                        </div>
+                        <div class="score">2 - 1</div>
+                        <div class="match-time">65'</div>
+                        <a href="#" class="watch-btn">Watch Now</a>
+                    </div>
+                </div>
+                
+                <!-- Match 2 -->
+                <div class="live-match-card">
+                    <div class="match-header">
+                        <span>La Liga</span>
+                        <div class="live-badge">
+                            <i class="fas fa-circle"></i> LIVE
+                        </div>
+                    </div>
+                    <div class="match-content">
+                        <div class="teams">
+                            <div class="team">
+                                <div class="team-logo">RMA</div>
+                                <div class="team-name">Real Madrid</div>
+                            </div>
+                            <div class="vs">VS</div>
+                            <div class="team">
+                                <div class="team-logo">FCB</div>
+                                <div class="team-name">Barcelona</div>
+                            </div>
+                        </div>
+                        <div class="score">1 - 1</div>
+                        <div class="match-time">72'</div>
+                        <a href="#" class="watch-btn">Watch Now</a>
+                    </div>
+                </div>
+                
+                <!-- Match 3 -->
+                <div class="live-match-card">
+                    <div class="match-header">
+                        <span>Serie A</span>
+                        <div class="live-badge">
+                            <i class="fas fa-circle"></i> LIVE
+                        </div>
+                    </div>
+                    <div class="match-content">
+                        <div class="teams">
+                            <div class="team">
+                                <div class="team-logo">JUV</div>
+                                <div class="team-name">Juventus</div>
+                            </div>
+                            <div class="vs">VS</div>
+                            <div class="team">
+                                <div class="team-logo">MIL</div>
+                                <div class="team-name">AC Milan</div>
+                            </div>
+                        </div>
+                        <div class="score">0 - 0</div>
+                        <div class="match-time">55'</div>
+                        <a href="#" class="watch-btn">Watch Now</a>
+                    </div>
+                </div>
+            </div>
+            
+            <h2 class="section-title" style="margin-top: 40px;">
+                <i class="far fa-calendar-alt"></i> Today's Matches
+            </h2>
+            
+            <div class="upcoming-container">
+                <div class="matches-list">
+                    <!-- Match 1 -->
+                    <div class="match-item">
+                        <div class="match-teams">
+                            <div class="team-logo" style="width: 30px; height: 30px; font-size: 0.8rem;">ARS</div>
+                            <div class="team-name">Arsenal</div>
+                            <span>vs</span>
+                            <div class="team-name">Chelsea</div>
+                            <div class="team-logo" style="width: 30px; height: 30px; font-size: 0.8rem;">CHE</div>
+                        </div>
+                        <div class="match-time">19:45</div>
+                    </div>
+                    
+                    <!-- Match 2 -->
+                    <div class="match-item">
+                        <div class="match-teams">
+                            <div class="team-logo" style="width: 30px; height: 30px; font-size: 0.8rem;">ATM</div>
+                            <div class="team-name">Atletico Madrid</div>
+                            <span>vs</span>
+                            <div class="team-name">Sevilla</div>
+                            <div class="team-logo" style="width: 30px; height: 30px; font-size: 0.8rem;">SEV</div>
+                        </div>
+                        <div class="match-time">20:00</div>
+                    </div>
+                    
+                    <!-- Match 3 -->
+                    <div class="match-item">
+                        <div class="match-teams">
+                            <div class="team-logo" style="width: 30px; height: 30px; font-size: 0.8rem;">PSG</div>
+                            <div class="team-name">PSG</div>
+                            <span>vs</span>
+                            <div class="team-name">Lyon</div>
+                            <div class="team-logo" style="width: 30px; height: 30px; font-size: 0.8rem;">LYO</div>
+                        </div>
+                        <div class="match-time">21:00</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Live Now Section -->
+        <section id="live-now" class="main-content">
+            <h2 class="section-title">
+                <i class="fas fa-play-circle"></i> Live Now
+            </h2>
+            
+            <div class="live-now-container">
+                <!-- Match 1 -->
+                <div class="live-match-card">
+                    <div class="match-header">
+                        <span>Premier League</span>
+                        <div class="live-badge">
+                            <i class="fas fa-circle"></i> LIVE
+                        </div>
+                    </div>
+                    <div class="match-content">
+                        <div class="teams">
+                            <div class="team">
+                                <div class="team-logo">MCI</div>
+                                <div class="team-name">Manchester City</div>
+                            </div>
+                            <div class="vs">VS</div>
+                            <div class="team">
+                                <div class="team-logo">LIV</div>
+                                <div class="team-name">Liverpool</div>
+                            </div>
+                        </div>
+                        <div class="score">2 - 1</div>
+                        <div class="match-time">65'</div>
+                        <a href="#" class="watch-btn">Watch Now</a>
+                    </div>
+                </div>
+                
+                <!-- Match 2 -->
+                <div class="live-match-card">
+                    <div class="match-header">
+                        <span>La Liga</span>
+                        <div class="live-badge">
+                            <i class="fas fa-circle"></i> LIVE
+                        </div>
+                    </div>
+                    <div class="match-content">
+                        <div class="teams">
+                            <div class="team">
+                                <div class="team-logo">RMA</div>
+                                <div class="team-name">Real Madrid</div>
+                            </div>
+                            <div class="vs">VS</div>
+                            <div class="team">
+                                <div class="team-logo">FCB</div>
+                                <div class="team-name">Barcelona</div>
+                            </div>
+                        </div>
+                        <div class="score">1 - 1</div>
+                        <div class="match-time">72'</div>
+                        <a href="#" class="watch-btn">Watch Now</a>
+                    </div>
+                </div>
+                
+                <!-- Match 3 -->
+                <div class="live-match-card">
+                    <div class="match-header">
+                        <span>Serie A</span>
+                        <div class="live-badge">
+                            <i class="fas fa-circle"></i> LIVE
+                        </div>
+                    </div>
+                    <div class="match-content">
+                        <div class="teams">
+                            <div class="team">
+                                <div class="team-logo">JUV</div>
+                                <div class="team-name">Juventus</div>
+                            </div>
+                            <div class="vs">VS</div>
+                            <div class="team">
+                                <div class="team-logo">MIL</div>
+                                <div class="team-name">AC Milan</div>
+                            </div>
+                        </div>
+                        <div class="score">0 - 0</div>
+                        <div class="match-time">55'</div>
+                        <a href="#" class="watch-btn">Watch Now</a>
+                    </div>
+                </div>
+                
+                <!-- Match 4 -->
+                <div class="live-match-card">
+                    <div class="match-header">
+                        <span>Bundesliga</span>
+                        <div class="live-badge">
+                            <i class="fas fa-circle"></i> LIVE
+                        </div>
+                    </div>
+                    <div class="match-content">
+                        <div class="teams">
+                            <div class="team">
+                                <div class="team-logo">BAY</div>
+                                <div class="team-name">Bayern Munich</div>
+                            </div>
+                            <div class="vs">VS</div>
+                            <div class="team">
+                                <div class="team-logo">BVB</div>
+                                <div class="team-name">Borussia Dortmund</div>
+                            </div>
+                        </div>
+                        <div class="score">3 - 2</div>
+                        <div class="match-time">78'</div>
+                        <a href="#" class="watch-btn">Watch Now</a>
+                    </div>
+                </div>
+                
+                <!-- Match 5 -->
+                <div class="live-match-card">
+                    <div class="match-header">
+                        <span>Ligue 1</span>
+                        <div class="live-badge">
+                            <i class="fas fa-circle"></i> LIVE
+                        </div>
+                    </div>
+                    <div class="match-content">
+                        <div class="teams">
+                            <div class="team">
+                                <div class="team-logo">PSG</div>
+                                <div class="team-name">PSG</div>
+                            </div>
+                            <div class="vs">VS</div>
+                            <div class="team">
+                                <div class="team-logo">MAR</div>
+                                <div class="team-name">Marseille</div>
+                            </div>
+                        </div>
+                        <div class="score">1 - 0</div>
+                        <div class="match-time">42'</div>
+                        <a href="#" class="watch-btn">Watch Now</a>
+                    </div>
+                </div>
+                
+                <!-- Match 6 -->
+                <div class="live-match-card">
+                    <div class="match-header">
+                        <span>Champions League</span>
+                        <div class="live-badge">
+                            <i class="fas fa-circle"></i> LIVE
+                        </div>
+                    </div>
+                    <div class="match-content">
+                        <div class="teams">
+                            <div class="team">
+                                <div class="team-logo">INT</div>
+                                <div class="team-name">Inter Milan</div>
+                            </div>
+                            <div class="vs">VS</div>
+                            <div class="team">
+                                <div class="team-logo">NAP</div>
+                                <div class="team-name">Napoli</div>
+                            </div>
+                        </div>
+                        <div class="score">0 - 1</div>
+                        <div class="match-time">33'</div>
+                        <a href="#" class="watch-btn">Watch Now</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Upcoming Matches Section -->
+        <section id="upcoming" class="main-content">
+            <h2 class="section-title">
+                <i class="far fa-calendar-alt"></i> Upcoming Matches
+            </h2>
+            
+            <div class="upcoming-container">
+                <div class="date-tabs">
+                    <div class="date-tab active">Today</div>
+                    <div class="date-tab">Tomorrow</div>
+                    <div class="date-tab">Saturday</div>
+                    <div class="date-tab">Sunday</div>
+                    <div class="date-tab">Monday</div>
+                    <div class="date-tab">Tuesday</div>
+                    <div class="date-tab">Wednesday</div>
+                </div>
+                
+                <div class="matches-list">
+                    <!-- Match 1 -->
+                    <div class="match-item">
+                        <div class="match-teams">
+                            <div class="team-logo" style="width: 30px; height: 30px; font-size: 0.8rem;">ARS</div>
+                            <div class="team-name">Arsenal</div>
+                            <span>vs</span>
+                            <div class="team-name">Chelsea</div>
+                            <div class="team-logo" style="width: 30px; height: 30px; font-size: 0.8rem;">CHE</div>
+                        </div>
+                        <div class="match-time">19:45</div>
+                    </div>
+                    
+                    <!-- Match 2 -->
+                    <div class="match-item">
+                        <div class="match-teams">
+                            <div class="team-logo" style="width: 30px; height: 30px; font-size: 0.8rem;">ATM</div>
+                            <div class="team-name">Atletico Madrid</div>
+                            <span>vs</span>
+                            <div class="team-name">Sevilla</div>
+                            <div class="team-logo" style="width: 30px; height: 30px; font-size: 0.8rem;">SEV</div>
+                        </div>
+                        <div class="match-time">20:00</div>
+                    </div>
+                    
+                    <!-- Match 3 -->
+                    <div class="match-item">
+                        <div class="match-teams">
+                            <div class="team-logo" style="width: 30px; height: 30px; font-size: 0.8rem;">PSG</div>
+                            <div class="team-name">PSG</div>
+                            <span>vs</span>
+                            <div class="team-name">Lyon</div>
+                            <div class="team-logo" style="width: 30px; height: 30px; font-size: 0.8rem;">LYO</div>
+                        </div>
+                        <div class="match-time">21:00</div>
+                    </div>
+                    
+                    <!-- Match 4 -->
+                    <div class="match-item">
+                        <div class="match-teams">
+                            <div class="team-logo" style="width: 30px; height: 30px; font-size: 0.8rem;">MUN</div>
+                            <div class="team-name">Manchester United</div>
+                            <span>vs</span>
+                            <div class="team-name">Newcastle</div>
+                            <div class="team-logo" style="width: 30px; height: 30px; font-size: 0.8rem;">NEW</div>
+                        </div>
+                        <div class="match-time">21:15</div>
+                    </div>
+                    
+                    <!-- Match 5 -->
+                    <div class="match-item">
+                        <div class="match-teams">
+                            <div class="team-logo" style="width: 30px; height: 30px; font-size: 0.8rem;">JUV</div>
+                            <div class="team-name">Juventus</div>
+                            <span>vs</span>
+                            <div class="team-name">Roma</div>
+                            <div class="team-logo" style="width: 30px; height: 30px; font-size: 0.8rem;">ROM</div>
+                        </div>
+                        <div class="match-time">22:00</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- League Tables Section -->
+        <section id="tables" class="main-content">
+            <h2 class="section-title">
+                <i class="fas fa-table"></i> League Tables
+            </h2>
+            
+            <div class="leagues-container">
+                <!-- Premier League Table -->
+                <div class="league-table">
+                    <div class="league-header">
+                        <i class="fas fa-trophy"></i>
+                        <span>Premier League</span>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Team</th>
+                                    <th>P</th>
+                                    <th>GD</th>
+                                    <th>Pts</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>
+                                        <div class="team-row">
+                                            <div class="team-logo" style="width: 25px; height: 25px; font-size: 0.7rem;">MCI</div>
+                                            <span>Man City</span>
+                                        </div>
+                                    </td>
+                                    <td>28</td>
+                                    <td>+45</td>
+                                    <td>67</td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>
+                                        <div class="team-row">
+                                            <div class="team-logo" style="width: 25px; height: 25px; font-size: 0.7rem;">LIV</div>
+                                            <span>Liverpool</span>
+                                        </div>
+                                    </td>
+                                    <td>28</td>
+                                    <td>+39</td>
+                                    <td>64</td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>
+                                        <div class="team-row">
+                                            <div class="team-logo" style="width: 25px; height: 25px; font-size: 0.7rem;">ARS</div>
+                                            <span>Arsenal</span>
+                                        </div>
+                                    </td>
+                                    <td>28</td>
+                                    <td>+35</td>
+                                    <td>64</td>
+                                </tr>
+                                <tr>
+                                    <td>4</td>
+                                    <td>
+                                        <div class="team-row">
+                                            <div class="team-logo" style="width: 25px; height: 25px; font-size: 0.7rem;">AVL</div>
+                                            <span>Aston Villa</span>
+                                        </div>
+                                    </td>
+                                    <td>29</td>
+                                    <td>+18</td>
+                                    <td>56</td>
+                                </tr>
+                                <tr>
+                                    <td>5</td>
+                                    <td>
+                                        <div class="team-row">
+                                            <div class="team-logo" style="width: 25px; height: 25px; font-size: 0.7rem;">TOT</div>
+                                            <span>Tottenham</span>
+                                        </div>
+                                    </td>
+                                    <td>29</td>
+                                    <td>+15</td>
+                                    <td>53</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- La Liga Table -->
+                <div class="league-table">
+                    <div class="league-header">
+                        <i class="fas
